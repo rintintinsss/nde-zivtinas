@@ -10,8 +10,15 @@
 
 <h1 class="text-3xl font-bold mb-6 text-blue-800">🐟 Nākamās Dienas Zivju Eksperti 🐟</h1>
 
+<!-- Easy Mode Checkbox -->
+<div class="mb-4">
+  <label class="text-blue-800 font-semibold">
+    <input type="checkbox" id="easyModeCheckbox"> Easy Mode
+  </label>
+</div>
+
 <div class="bg-white shadow-lg rounded-2xl p-6 max-w-md w-full text-center">
-  <img id="fishImage" src="" alt="Fish" class="w-full h-64 object-cover rounded-xl mb-4 border border-blue-300">
+  <img id="fishImage" src="" alt="Fish" class="w-full h-auto max-h-64 object-contain rounded-xl mb-4 border border-blue-300">
   <div id="options" class="grid grid-cols-2 gap-4"></div>
   <p id="feedback" class="mt-4 text-lg font-semibold"></p>
   <p id="score" class="mt-2 text-blue-900 font-semibold"></p>
@@ -20,124 +27,124 @@
 </div>
 
 <script>
-// Example fish database (you can expand this)
+// Fish database with some fish marked as easy
 const fishDB = [
-  {name: "Upes nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-fluviatilis-l-420x300.jpg"},
-  {name: "Strauta nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-planeri-bloch-420x300.jpg"},
-  {name: "Jūras nēģis", image: "https://www.latvijasdaba.lv/content/zivis/petromyzon-marinus-l-420x300.jpg"},
+  {name: "Upes nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-fluviatilis-l-420x300.jpg", easy: true},
+  {name: "Strauta nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-planeri-bloch-420x300.jpg", easy: true},
+  {name: "Jūras nēģis", image: "https://www.latvijasdaba.lv/content/zivis/petromyzon-marinus-l-420x300.jpg", easy: true},
   {name: "Sibīrijas store", image: "https://www.latvijasdaba.lv/content/zivis/acipenser-baeri-brandt-420x300.jpg"},
   {name: "Krievu store", image: "https://www.latvijasdaba.lv/content/zivis/acipenser-guldenstadti-brandt-420x300.jpg"},
   {name: "Store", image: "https://www.latvijasdaba.lv/content/zivis/acipenser-sturio-l-420x300.jpg"},
   {name: "Sterlete", image: "https://www.latvijasdaba.lv/content/zivis/acipenser-ruthenus-l-420x300.jpg"},
   {name: "Beluga", image: "https://www.latvijasdaba.lv/content/zivis/huso-huso-l-420x300.jpg"},
   {name: "Aloza", image: "https://www.latvijasdaba.lv/content/zivis/alosa-alosa-l-420x300.jpg"},
-  {name: "Palede", image: "https://www.latvijasdaba.lv/content/zivis/alosa-fallax-lacep-420x300.jpg"},
-  {name: "Reņģe", image: "https://www.latvijasdaba.lv/content/zivis/clupea-harengus-membras-l-420x300.jpg"},
-  {name: "Brētliņa", image: "https://www.latvijasdaba.lv/content/zivis/sprattus-sprattus-balticus-schneider-420x300.jpg"},
+  {name: "Palede", image: "https://www.latvijasdaba.lv/content/zivis/alosa-fallax-lacep-420x300.jpg", easy: true},
+  {name: "Reņģe", image: "https://www.latvijasdaba.lv/content/zivis/clupea-harengus-membras-l-420x300.jpg", easy: true},
+  {name: "Brētliņa", image: "https://www.latvijasdaba.lv/content/zivis/sprattus-sprattus-balticus-schneider-420x300.jpg", easy: true},
   {name: "Anšovs", image: "https://www.latvijasdaba.lv/content/zivis/engraulis-encrasicholus-l-420x300.jpg"},
   {name: "Kuprlasis", image: "https://www.latvijasdaba.lv/content/zivis/oncorhynchus-gorbuscha-walb-420x300.jpg"},
   {name: "Ketlasis", image: "https://www.latvijasdaba.lv/content/zivis/oncorhynchus-keta-walb-420x300.jpg"},
   {name: "Kižučs", image: "https://www.latvijasdaba.lv/content/zivis/oncorhynchus-kisutch-walb-420x300.jpg"},
   {name: "Varavīksnes forele", image: "https://www.latvijasdaba.lv/content/zivis/oncorhynchus-mykiss-walb-420x300.jpg"},
-  {name: "Lasis", image: "https://www.latvijasdaba.lv/content/zivis/salmo-salar-l-420x300.jpg"},
-  {name: "Strauta forele", image: "https://www.latvijasdaba.lv/content/zivis/salmo-trutta-fario-l-420x300.jpg"},
-  {name: "Taimiņš", image: "https://www.latvijasdaba.lv/content/zivis/salmo-trutta-l-B-420x300.jpg"},
+  {name: "Lasis", image: "https://www.latvijasdaba.lv/content/zivis/salmo-salar-l-420x300.jpg", easy: true},
+  {name: "Strauta forele", image: "https://www.latvijasdaba.lv/content/zivis/salmo-trutta-fario-l-420x300.jpg", easy: true},
+  {name: "Taimiņš", image: "https://www.latvijasdaba.lv/content/zivis/salmo-trutta-l-B-420x300.jpg", easy: true},
   {name: "Arktikas palija", image: "https://www.latvijasdaba.lv/content/zivis/salvelinus-alpinus-l-420x300.jpg"},
   {name: "Avota palija", image: "https://www.latvijasdaba.lv/content/zivis/salvelinus-fontinalis-mitch-420x300.jpg"},
-  {name: "Repsis", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-albula-l-420x300.jpg"},
+  {name: "Repsis", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-albula-l-420x300.jpg", easy: true},
   {name: "Baikāla omulis", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-autumnalis-migratorius-georgi-420x300.jpg"},
-  {name: "Sīga", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-lavaretus-l-420x300.jpg"},
+  {name: "Sīga", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-lavaretus-l-420x300.jpg", easy: true},
   {name: "Muksuns", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-muksun-pall-420x300.jpg"},
   {name: "Čirs", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-nasus-pall-420x300.jpg"},
   {name: "Pelede", image: "https://www.latvijasdaba.lv/content/zivis/coregonus-peled-gmelin-420x300.jpg"},
   {name: "Nelma", image: "https://www.latvijasdaba.lv/content/zivis/stenodus-leucichthys-nelma-pall-420x300.jpg"},
-  {name: "Alata", image: "https://www.latvijasdaba.lv/content/zivis/thymallus-thymallus-l-420x300.jpg"},
-  {name: "Salaka", image: "https://www.latvijasdaba.lv/content/zivis/osmerus-eperlanus-l-420x300.jpg"},
-  {name: "Līdaka", image: "https://www.latvijasdaba.lv/content/zivis/esox-lucius-l-420x300.jpg"},
-  {name: "Zutis", image: "https://www.latvijasdaba.lv/content/zivis/anguilla-anguilla-l-420x300.jpg"},
+  {name: "Alata", image: "https://www.latvijasdaba.lv/content/zivis/thymallus-thymallus-l-420x300.jpg", easy: true},
+  {name: "Salaka", image: "https://www.latvijasdaba.lv/content/zivis/osmerus-eperlanus-l-420x300.jpg", easy: true},
+  {name: "Līdaka", image: "https://www.latvijasdaba.lv/content/zivis/esox-lucius-l-420x300.jpg", easy: true},
+  {name: "Zutis", image: "https://www.latvijasdaba.lv/content/zivis/anguilla-anguilla-l-420x300.jpg", easy: true},
   {name: "Jūraszutis", image: "https://www.latvijasdaba.lv/content/zivis/conger-conger-l-420x300.jpg"},
   {name: "Spāre", image: "https://www.latvijasdaba.lv/content/zivis/abramis-ballerus-l-420x300.jpg"},
-  {name: "Plaudis", image: "https://www.latvijasdaba.lv/content/zivis/abramis-brama-l-420x300.jpg"},
-  {name: "Pavīķe", image: "https://www.latvijasdaba.lv/content/zivis/alburnoides-bipunctatus-bloch-420x300.jpg"},
-  {name: "Vīķe", image: "https://www.latvijasdaba.lv/content/zivis/alburnus-alburnus-l-420x300.jpg"},
+  {name: "Plaudis", image: "https://www.latvijasdaba.lv/content/zivis/abramis-brama-l-420x300.jpg", easy: true},
+  {name: "Pavīķe", image: "https://www.latvijasdaba.lv/content/zivis/alburnoides-bipunctatus-bloch-420x300.jpg", easy: true},
+  {name: "Vīķe", image: "https://www.latvijasdaba.lv/content/zivis/alburnus-alburnus-l-420x300.jpg", easy: true},
   {name: "Raibais platpieris", image: "https://www.latvijasdaba.lv/content/zivis/aristichthys-nobilis-rich-420x300.jpg"},
-  {name: "Salate", image: "https://www.latvijasdaba.lv/content/zivis/aspius-aspius-l-420x300.jpg"},
+  {name: "Salate", image: "https://www.latvijasdaba.lv/content/zivis/aspius-aspius-l-420x300.jpg", easy: true},
   {name: "Barbe", image: "https://www.latvijasdaba.lv/content/zivis/barbus-barbus-l-420x300.jpg"},
-  {name: "Plicis", image: "https://www.latvijasdaba.lv/content/zivis/blicca-bjoerkna-l-420x300.jpg"},
-  {name: "Sudrabkarūsa", image: "https://www.latvijasdaba.lv/content/zivis/carassius-auratus-l-420x300.jpg"},
-  {name: "Karūsa", image: "https://www.latvijasdaba.lv/content/zivis/carassius-carassius-l-420x300.jpg"},
+  {name: "Plicis", image: "https://www.latvijasdaba.lv/content/zivis/blicca-bjoerkna-l-420x300.jpg", easy: true},
+  {name: "Sudrabkarūsa", image: "https://www.latvijasdaba.lv/content/zivis/carassius-auratus-l-420x300.jpg", easy: true},
+  {name: "Karūsa", image: "https://www.latvijasdaba.lv/content/zivis/carassius-carassius-l-420x300.jpg", easy: true},
   {name: "Apakšmute", image: "https://www.latvijasdaba.lv/content/zivis/chondrostoma-nasus-l-420x300.jpg"},
   {name: "Baltais amūrs", image: "https://www.latvijasdaba.lv/content/zivis/ctenopharyngodon-idella-valen-420x300.jpg"},
-  {name: "Karpa", image: "https://www.latvijasdaba.lv/content/zivis/cyprinus-carpio-l-420x300.jpg"},
-  {name: "Grundulis", image: "https://www.latvijasdaba.lv/content/zivis/gobio-gobio-l-420x300.jpg"},
+  {name: "Karpa", image: "https://www.latvijasdaba.lv/content/zivis/cyprinus-carpio-l-420x300.jpg", easy: true},
+  {name: "Grundulis", image: "https://www.latvijasdaba.lv/content/zivis/gobio-gobio-l-420x300.jpg", easy: true},
   {name: "Baltais platpieris", image: "https://www.latvijasdaba.lv/content/zivis/hypophthalmichthys-molitrix-val-420x300.jpg"},
-  {name: "Ausleja", image: "https://www.latvijasdaba.lv/content/zivis/leucaspius-delineatus-heck-420x300.jpg"},
-  {name: "Sapals", image: "https://www.latvijasdaba.lv/content/zivis/leuciscus-cephalus-l-420x300.jpg"},
+  {name: "Ausleja", image: "https://www.latvijasdaba.lv/content/zivis/leucaspius-delineatus-heck-420x300.jpg", easy: true},
+  {name: "Sapals", image: "https://www.latvijasdaba.lv/content/zivis/leuciscus-cephalus-l-420x300.jpg", easy: true},
   {name: "Ālants", image: "https://www.latvijasdaba.lv/content/zivis/leuciscus-idus-l-420x300.jpg"},
-  {name: "Baltais sapals", image: "https://www.latvijasdaba.lv/content/zivis/leuciscus-leuciscus-l-420x300.jpg"},
+  {name: "Baltais sapals", image: "https://www.latvijasdaba.lv/content/zivis/leuciscus-leuciscus-l-420x300.jpg", easy: true},
   {name: "Melnais amūrs", image: "https://www.latvijasdaba.lv/content/zivis/mylopharyngodon-piceus-rich-420x300.jpg"},
-  {name: "Kaze", image: "https://www.latvijasdaba.lv/content/zivis/pelecus-cultratus-l-420x300.jpg"},
-  {name: "Mailīte", image: "https://www.latvijasdaba.lv/content/zivis/phoxinus-phoxinus-l-420x300.jpg"},
-  {name: "Amūras čebačeks", image: "https://www.latvijasdaba.lv/content/zivis/pseudorasbora-parva-schleg-420x300.jpg"},
+  {name: "Kaze", image: "https://www.latvijasdaba.lv/content/zivis/pelecus-cultratus-l-420x300.jpg", easy: true},
+  {name: "Mailīte", image: "https://www.latvijasdaba.lv/content/zivis/phoxinus-phoxinus-l-420x300.jpg", easy: true},
+  {name: "Amūras čebačeks", image: "https://www.latvijasdaba.lv/content/zivis/pseudorasbora-parva-schleg-420x300.jpg", easy: true},
   {name: "Spidiļķis", image: "https://www.latvijasdaba.lv/content/zivis/rhodeus-sericeus-bloch-420x300.jpg"},
-  {name: "Rauda", image: "https://www.latvijasdaba.lv/content/zivis/rutilus-rutilus-l-420x300.jpg"},
-  {name: "Rudulis", image: "https://www.latvijasdaba.lv/content/zivis/scardinius-erythrophthalmus-l-420x300.jpg"},
-  {name: "Līnis", image: "https://www.latvijasdaba.lv/content/zivis/tinca-tinca-l-420x300.jpg" },
-  {name: "Vimba", image: "https://www.latvijasdaba.lv/content/zivis/vimba-vimba-l-420x300.jpg" },
-  {name: "Akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/cobitis-taenia-l-420x300.jpg" },
+  {name: "Rauda", image: "https://www.latvijasdaba.lv/content/zivis/rutilus-rutilus-l-420x300.jpg", easy: true},
+  {name: "Rudulis", image: "https://www.latvijasdaba.lv/content/zivis/scardinius-erythrophthalmus-l-420x300.jpg", easy: true},
+  {name: "Līnis", image: "https://www.latvijasdaba.lv/content/zivis/tinca-tinca-l-420x300.jpg", easy: true },
+  {name: "Vimba", image: "https://www.latvijasdaba.lv/content/zivis/vimba-vimba-l-420x300.jpg", easy: true },
+  {name: "Akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/cobitis-taenia-l-420x300.jpg", easy: true },
   {name: "Pīkste", image: "https://www.latvijasdaba.lv/content/zivis/misgurnus-fossilis-l-420x300.jpg" },
-  {name: "Bārdainais akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/noemacheilus-barbatulus-l-420x300.jpg" },
-  {name: "Ziemeļu zeltainais akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/sabanejewia-baltica-witkowski-420x300.jpg" },
-  {name: "Vējzivs", image: "https://www.latvijasdaba.lv/content/zivis/belone-belone-l-420x300.jpg" },
-  {name: "Sams", image: "https://www.latvijasdaba.lv/content/zivis/silurus-glanis-l-420x300.jpg" },
+  {name: "Bārdainais akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/noemacheilus-barbatulus-l-420x300.jpg", easy: true },
+  {name: "Ziemeļu zeltainais akmeņgrauzis", image: "https://www.latvijasdaba.lv/content/zivis/sabanejewia-baltica-witkowski-420x300.jpg", easy: true},
+  {name: "Vējzivs", image: "https://www.latvijasdaba.lv/content/zivis/belone-belone-l-420x300.jpg", easy: true },
+  {name: "Sams", image: "https://www.latvijasdaba.lv/content/zivis/silurus-glanis-l-420x300.jpg", easy: true },
   {name: "Jūrasvēdzele", image: "https://www.latvijasdaba.lv/content/zivis/enchelyopus-cimbrius-l-420x300.jpg" },
-  {name: "Menca", image: "https://www.latvijasdaba.lv/content/zivis/gadus-morhua-callarias-l-420x300.jpg" },
-  {name: "Vēdzele", image: "https://www.latvijasdaba.lv/content/zivis/lota-lota-l-420x300.jpg" },
+  {name: "Menca", image: "https://www.latvijasdaba.lv/content/zivis/gadus-morhua-callarias-l-420x300.jpg", easy: true },
+  {name: "Vēdzele", image: "https://www.latvijasdaba.lv/content/zivis/lota-lota-l-420x300.jpg", easy: true },
   {name: "Pikša", image: "https://www.latvijasdaba.lv/content/zivis/melanogrammus-aeglefinus-l-420x300.jpg" },
   {name: "Merlangs", image: "https://www.latvijasdaba.lv/content/zivis/merlangius-merlangus-l-420x300.jpg" },
   {name: "Pollaks", image: "https://www.latvijasdaba.lv/content/zivis/pollachius-pollachius-l-420x300.jpg" },
   {name: "Saida", image: "https://www.latvijasdaba.lv/content/zivis/pollachius-virens-l-420x300.jpg" },
-  {name: "Trīsadatu stagars", image: "https://www.latvijasdaba.lv/content/zivis/gasterosteus-aculeatus-l-420x300.jpg" },
-  {name: "Deviņadatu stagars", image: "https://www.latvijasdaba.lv/content/zivis/pungitius-pungitius-l-420x300.jpg" },
+  {name: "Trīsadatu stagars", image: "https://www.latvijasdaba.lv/content/zivis/gasterosteus-aculeatus-l-420x300.jpg", easy: true },
+  {name: "Deviņadatu stagars", image: "https://www.latvijasdaba.lv/content/zivis/pungitius-pungitius-l-420x300.jpg", easy: true },
   {name: "Jūrasstagars", image: "https://www.latvijasdaba.lv/content/zivis/spinachia-spinachia-l-420x300.jpg" },
-  {name: "Čūskzivs", image: "https://www.latvijasdaba.lv/content/zivis/nerophis-ophidion-l-420x300.jpg" },
-  {name: "Gardeguna adatzivs", image: "https://www.latvijasdaba.lv/content/zivis/syngnathus-typhle-l-420x300.jpg" },
+  {name: "Čūskzivs", image: "https://www.latvijasdaba.lv/content/zivis/nerophis-ophidion-l-420x300.jpg", easy: true },
+  {name: "Gardeguna adatzivs", image: "https://www.latvijasdaba.lv/content/zivis/syngnathus-typhle-l-420x300.jpg", easy: true },
   {name: "Jūrasasaris", image: "https://www.latvijasdaba.lv/content/zivis/dicentrarchus-labrax-l-420x300.jpg" },
   {name: "Svītrainais asaris", image: "https://www.latvijasdaba.lv/content/zivis/morone-saxatilis-walb-420x300.jpg" },
-  {name: "Ķīsis", image: "https://www.latvijasdaba.lv/content/zivis/gymnocephalus-cernua-l-420x300.jpg" },
-  {name: "Asaris", image: "https://www.latvijasdaba.lv/content/zivis/perca-fluviatilis-l-420x300.jpg" },
-  {name: "Zandarts", image: "https://www.latvijasdaba.lv/content/zivis/stizostedion-lucioperca-l-420x300.jpg" },
-  {name: "Tūbīte", image: "https://www.latvijasdaba.lv/content/zivis/ammodytes-tobianus-l-420x300.jpg" },
-  {name: "Nigliņš", image: "https://www.latvijasdaba.lv/content/zivis/hyperoplus-lanceolatus-le-sauvage-420x300.jpg" },
+  {name: "Ķīsis", image: "https://www.latvijasdaba.lv/content/zivis/gymnocephalus-cernua-l-420x300.jpg", easy: true },
+  {name: "Asaris", image: "https://www.latvijasdaba.lv/content/zivis/perca-fluviatilis-l-420x300.jpg", easy: true },
+  {name: "Zandarts", image: "https://www.latvijasdaba.lv/content/zivis/stizostedion-lucioperca-l-420x300.jpg", easy: true },
+  {name: "Tūbīte", image: "https://www.latvijasdaba.lv/content/zivis/ammodytes-tobianus-l-420x300.jpg", easy: true },
+  {name: "Nigliņš", image: "https://www.latvijasdaba.lv/content/zivis/hyperoplus-lanceolatus-le-sauvage-420x300.jpg", easy: true },
   {name: "Pelamida", image: "https://www.latvijasdaba.lv/content/zivis/sarda-sarda-bloch-420x300.jpg" },
   {name: "Makrele", image: "https://www.latvijasdaba.lv/content/zivis/scomber-scomber-l-420x300.jpg" },
   {name: "Zobenzivs", image: "https://www.latvijasdaba.lv/content/zivis/xiphias-gladius-l-420x300.jpg" },
   {name: "Melnais jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/gobius-niger-l-420x300.jpg" },
   {name: "Divplankumu jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/globiusculus-flavescens-fabr-420x300.jpg" },
-  {name: "Apaļais jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/neogobius-melanostomus-pallas-420x300.jpg" },
-  {name: "Jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/pomatoschistus-microps-kryer-420x300.jpg" },
-  {name: "Mazais jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/pomatoschistus-minutus-pallas-420x300.jpg" },
+  {name: "Apaļais jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/neogobius-melanostomus-pallas-420x300.jpg", easy: true },
+  {name: "Jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/pomatoschistus-microps-kryer-420x300.jpg", easy: true },
+  {name: "Mazais jūrasgrundulis", image: "https://www.latvijasdaba.lv/content/zivis/pomatoschistus-minutus-pallas-420x300.jpg", easy: true },
   {name: "Lentzivs", image: "https://www.latvijasdaba.lv/content/zivis/lumpenus-lampretaeformis-walb-420x300.jpg" },
   {name: "Taukzivs", image: "https://www.latvijasdaba.lv/content/zivis/pholis-gunnellus-l-420x300.jpg" },
-  {name: "Lucītis", image: "https://www.latvijasdaba.lv/content/zivis/zoarces-viviparus-l-420x300.jpg" },
+  {name: "Lucītis", image: "https://www.latvijasdaba.lv/content/zivis/zoarces-viviparus-l-420x300.jpg", easy: true },
   {name: "Biezlūpu kefale", image: "https://www.latvijasdaba.lv/content/zivis/chelon-labrosus-risso-420x300.jpg" },
   {name: "Plānlūpu kefale", image: "https://www.latvijasdaba.lv/content/zivis/liza-ramada-risso-420x300.jpg" },
   {name: "Eleotriss", image: "https://www.latvijasdaba.lv/content/zivis/hypseleotris-swinhonis-gunther-420x300.jpg" },
-  {name: "Rotans", image: "https://www.latvijasdaba.lv/content/zivis/percottus-glehni-dyb-420x300.jpg" },
+  {name: "Rotans", image: "https://www.latvijasdaba.lv/content/zivis/percottus-glehni-dyb-420x300.jpg", easy: true },
   {name: "Stavrida", image: "https://www.latvijasdaba.lv/content/zivis/trachurus-trachurus-l-420x300.jpg" },
   {name: "Vilkzivs", image: "https://www.latvijasdaba.lv/content/zivis/anarhichas-lupus-l-420x300.jpg" },
-  {name: "Platgalve", image: "https://www.latvijasdaba.lv/content/zivis/cottus-gobio-l-420x300.jpg" },
+  {name: "Platgalve", image: "https://www.latvijasdaba.lv/content/zivis/cottus-gobio-l-420x300.jpg", easy: true },
   {name: "Raibā platgalve", image: "https://www.latvijasdaba.lv/content/zivis/cottus-poecilopus-heck-420x300.jpg" },
-  {name: "Ziemeļu buļļzivs", image: "https://www.latvijasdaba.lv/content/zivis/myoxocephalus-scorpius-l-420x300.jpg" },
+  {name: "Ziemeļu buļļzivs", image: "https://www.latvijasdaba.lv/content/zivis/myoxocephalus-scorpius-l-420x300.jpg", easy: true },
   {name: "Jūras dzeloņgalve", image: "https://www.latvijasdaba.lv/content/zivis/taurulus-bubalis-euphrasen-420x300.jpg" },
-  {name: "Četrragu buļļzivs", image: "https://www.latvijasdaba.lv/content/zivis/triglopsis-quadricornis-l-420x300.jpg" },
+  {name: "Četrragu buļļzivs", image: "https://www.latvijasdaba.lv/content/zivis/triglopsis-quadricornis-l-420x300.jpg", easy: true },
   {name: "Āķdegunis", image: "https://www.latvijasdaba.lv/content/zivis/agonus-cataphractus-l-420x300.jpg" },
   {name: "Jūras zaķzivs", image: "https://www.latvijasdaba.lv/content/zivis/cyclopterus-lumpus-l-420x300.jpg" },
   {name: "Plūkšņzivs", image: "https://www.latvijasdaba.lv/content/zivis/liparis-liparis-ekstrom-420x300.jpg" },
-  {name: "Akmeņplekste", image: "https://www.latvijasdaba.lv/content/zivis/psetta-maxima-l-420x300.jpg" },
+  {name: "Akmeņplekste", image: "https://www.latvijasdaba.lv/content/zivis/psetta-maxima-l-420x300.jpg", easy: true },
   {name: "Gludais rombs", image: "https://www.latvijasdaba.lv/content/zivis/scophthalmus-rhombus-l-420x300.jpg" },
   {name: "Gludā plekste", image: "https://www.latvijasdaba.lv/content/zivis/limanda-limanda-l-420x300.jpg" },
-  {name: "Plekste", image: "https://www.latvijasdaba.lv/content/zivis/platichthys-flesus-l-420x300.jpg" },
+  {name: "Plekste", image: "https://www.latvijasdaba.lv/content/zivis/platichthys-flesus-l-420x300.jpg", easy: true },
   {name: "Jūras zeltplekste", image: "https://www.latvijasdaba.lv/content/zivis/pleuronectes-platessa-l-420x300.jpg" }
 ];
 
@@ -153,6 +160,7 @@ const feedback = document.getElementById("feedback");
 const scoreDisplay = document.getElementById("score");
 const newGameBtn = document.getElementById("newGameBtn");
 const nextButton = document.getElementById("nextButton");
+const easyModeCheckbox = document.getElementById("easyModeCheckbox");
 
 // Shuffle array utility
 function shuffleArray(arr) {
@@ -160,28 +168,36 @@ function shuffleArray(arr) {
 }
 
 function loadFish() {
-  if (moves >= maxMoves || usedFishIndices.length >= fishDB.length) {
+  if (moves >= maxMoves) {
     endGame();
     return;
   }
 
   feedback.textContent = "";
 
+  // Filter fish pool based on Easy Mode
+  let pool = easyModeCheckbox.checked ? fishDB.filter(f => f.easy) : fishDB;
+
+  // Avoid running out of fish
+  if (pool.length === 0) {
+    feedback.textContent = "No fish available for this mode!";
+    return;
+  }
+
   // Select a fish not used yet
   let index;
   do {
-    index = Math.floor(Math.random() * fishDB.length);
-  } while (usedFishIndices.includes(index));
+    index = Math.floor(Math.random() * pool.length);
+  } while (usedFishIndices.includes(index) && usedFishIndices.length < pool.length);
 
   usedFishIndices.push(index);
-  currentFish = fishDB[index];
+  currentFish = pool[index];
   fishImage.src = currentFish.image;
 
-  // Select 3 other random fishes
-  let wrongOptions = fishDB.filter((_, i) => i !== index);
+  // Select 3 other random fishes from the same pool
+  let wrongOptions = pool.filter((_, i) => i !== index);
   wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
 
-  // Combine correct + wrong options
   const allOptions = shuffleArray([currentFish, ...wrongOptions]);
 
   optionsContainer.innerHTML = "";
@@ -201,23 +217,17 @@ function checkAnswer(selected) {
     feedback.textContent = "✅ Correct!";
     feedback.className = "text-green-600 font-semibold mt-4";
     score++;
-    
     moves++;
     scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
-
-    // Automatically go to next question after 1 sec
     setTimeout(loadFish, 1000);
   } else {
     feedback.textContent = `❌ Wrong! Correct: ${currentFish.name}`;
     feedback.className = "text-red-600 font-semibold mt-4";
-    
     moves++;
     scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
-
-    // Show the "Next" button for user to continue
-    nextButton.style.display = "inline-block"; // make sure you have a nextButton in your HTML
+    nextButton.style.display = "inline-block";
     nextButton.onclick = function() {
-      nextButton.style.display = "none"; // hide again
+      nextButton.style.display = "none";
       loadFish();
     };
   }
