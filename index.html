@@ -16,6 +16,7 @@
   <p id="feedback" class="mt-4 text-lg font-semibold"></p>
   <p id="score" class="mt-2 text-blue-900 font-semibold"></p>
   <button id="newGameBtn" class="mt-4 bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-xl hidden">New Game</button>
+  <button id="nextButton" style="display:none;">Next</button>
 </div>
 
 <script>
@@ -151,6 +152,7 @@ const optionsContainer = document.getElementById("options");
 const feedback = document.getElementById("feedback");
 const scoreDisplay = document.getElementById("score");
 const newGameBtn = document.getElementById("newGameBtn");
+const nextButton = document.getElementById("nextButton");
 
 // Shuffle array utility
 function shuffleArray(arr) {
