@@ -199,15 +199,26 @@ function checkAnswer(selected) {
     feedback.textContent = "✅ Correct!";
     feedback.className = "text-green-600 font-semibold mt-4";
     score++;
+    
+    moves++;
+    scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
+
+    // Automatically go to next question after 1 sec
+    setTimeout(loadFish, 1000);
   } else {
     feedback.textContent = `❌ Wrong! Correct: ${currentFish.name}`;
     feedback.className = "text-red-600 font-semibold mt-4";
+    
+    moves++;
+    scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
+
+    // Show the "Next" button for user to continue
+    nextButton.style.display = "inline-block"; // make sure you have a nextButton in your HTML
+    nextButton.onclick = function() {
+      nextButton.style.display = "none"; // hide again
+      loadFish();
+    };
   }
-
-  moves++;
-  scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
-
-  setTimeout(loadFish, 1000);
 }
 
 function endGame() {
