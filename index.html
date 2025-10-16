@@ -10,14 +10,22 @@
 
 <h1 class="text-3xl font-bold mb-6 text-blue-800">🐟 Nākamās Dienas Zivju Eksperti 🐟</h1>
 
-<!-- Easy Mode Checkbox -->
-<div class="mb-4">
-  <label class="text-blue-800 font-semibold">
-    <input type="checkbox" id="easyModeCheckbox"> Easy Mode
+<!-- Mode selection -->
+<div class="bg-white shadow-lg rounded-2xl p-6 max-w-md w-full text-center mb-6">
+  <p class="text-blue-900 font-semibold mb-2">Select Mode:</p>
+  <label class="mr-4 text-blue-800 font-semibold">
+    <input type="radio" name="mode" value="normal"> Normal
   </label>
+  <label class="text-blue-800 font-semibold">
+    <input type="radio" name="mode" value="easy"> Easy
+  </label>
+  <div class="mt-4">
+    <button id="startGameBtn" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-xl" disabled>Start Game</button>
+  </div>
 </div>
 
-<div class="bg-white shadow-lg rounded-2xl p-6 max-w-md w-full text-center">
+<!-- Game container -->
+<div id="gameContainer" class="bg-white shadow-lg rounded-2xl p-6 max-w-md w-full text-center hidden">
   <img id="fishImage" src="" alt="Fish" class="w-full h-auto max-h-64 object-contain rounded-xl mb-4 border border-blue-300">
   <div id="options" class="grid grid-cols-2 gap-4"></div>
   <p id="feedback" class="mt-4 text-lg font-semibold"></p>
@@ -27,9 +35,9 @@
 </div>
 
 <script>
-// Fish database with some fish marked as easy
+// Fish database with some marked as easy
 const fishDB = [
-  {name: "Upes nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-fluviatilis-l-420x300.jpg", easy: true},
+    {name: "Upes nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-fluviatilis-l-420x300.jpg", easy: true},
   {name: "Strauta nēģis", image: "https://www.latvijasdaba.lv/content/zivis/lampetra-planeri-bloch-420x300.jpg", easy: true},
   {name: "Jūras nēģis", image: "https://www.latvijasdaba.lv/content/zivis/petromyzon-marinus-l-420x300.jpg", easy: true},
   {name: "Sibīrijas store", image: "https://www.latvijasdaba.lv/content/zivis/acipenser-baeri-brandt-420x300.jpg"},
@@ -146,6 +154,7 @@ const fishDB = [
   {name: "Gludā plekste", image: "https://www.latvijasdaba.lv/content/zivis/limanda-limanda-l-420x300.jpg" },
   {name: "Plekste", image: "https://www.latvijasdaba.lv/content/zivis/platichthys-flesus-l-420x300.jpg", easy: true },
   {name: "Jūras zeltplekste", image: "https://www.latvijasdaba.lv/content/zivis/pleuronectes-platessa-l-420x300.jpg" }
+  // Add more fish here, marking easy ones with easy: true
 ];
 
 let currentFish = {};
@@ -153,14 +162,25 @@ let usedFishIndices = [];
 let score = 0;
 let moves = 0;
 const maxMoves = 10;
+let selectedMode = "normal";
 
+const gameContainer = document.getElementById("gameContainer");
 const fishImage = document.getElementById("fishImage");
 const optionsContainer = document.getElementById("options");
 const feedback = document.getElementById("feedback");
 const scoreDisplay = document.getElementById("score");
 const newGameBtn = document.getElementById("newGameBtn");
 const nextButton = document.getElementById("nextButton");
-const easyModeCheckbox = document.getElementById("easyModeCheckbox");
+const startGameBtn = document.getElementById("startGameBtn");
+const modeRadios = document.querySelectorAll('input[name="mode"]');
+
+// Enable start button once a mode is selected
+modeRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    selectedMode = document.querySelector('input[name="mode"]:checked').value;
+    startGameBtn.disabled = false;
+  });
+});
 
 // Shuffle array utility
 function shuffleArray(arr) {
@@ -175,10 +195,9 @@ function loadFish() {
 
   feedback.textContent = "";
 
-  // Filter fish pool based on Easy Mode
-  let pool = easyModeCheckbox.checked ? fishDB.filter(f => f.easy) : fishDB;
+  // Filter fish pool based on selected mode
+  let pool = selectedMode === "easy" ? fishDB.filter(f => f.easy) : fishDB;
 
-  // Avoid running out of fish
   if (pool.length === 0) {
     feedback.textContent = "No fish available for this mode!";
     return;
@@ -248,9 +267,14 @@ function newGame() {
   loadFish();
 }
 
-newGameBtn.onclick = newGame;
+// Start Game button
+startGameBtn.onclick = function() {
+  document.querySelector('.bg-white.shadow-lg.rounded-2xl.p-6.mb-6').style.display = 'none'; // hide mode selection
+  gameContainer.classList.remove("hidden");
+  newGame(); // start the game
+};
 
-loadFish();
+newGameBtn.onclick = newGame;
 </script>
 </body>
 </html>
