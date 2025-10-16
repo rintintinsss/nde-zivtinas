@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fish Quiz Game</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen bg-blue-100 p-4">
+
+<h1 class="text-3xl font-bold mb-6 text-blue-800">🐟 Fish Quiz</h1>
+
+<div class="bg-white shadow-lg rounded-2xl p-6 max-w-md w-full text-center">
+  <img id="fishImage" src="" alt="Fish" class="w-full h-64 object-cover rounded-xl mb-4 border border-blue-300">
+  <div id="options" class="grid grid-cols-2 gap-4"></div>
+  <p id="feedback" class="mt-4 text-lg font-semibold"></p>
+  <p id="score" class="mt-2 text-blue-900 font-semibold"></p>
+  <button id="newGameBtn" class="mt-4 bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-xl hidden">New Game</button>
+</div>
+
+<script>
+// Example fish database (you can expand this)
+const fishDB = [
+  {name: "Līdaka", image: "https://www.latvijasdaba.lv/content/zivis/esox-lucius-l-420x300.jpg"},
+  {name: "Asaris", image: "https://www.latvijasdaba.lv/content/zivis/perca-fluviatilis-l-420x300.jpg"},
+  {name: "Lasis", image: "https://www.latvijasdaba.lv/content/zivis/salmo-salar-l-420x300.jpg"},
+  {name: "Strauta Forele", image: "https://www.latvijasdaba.lv/content/zivis/salmo-trutta-fario-l-420x300.jpg"},
+  {name: "Zandarts", image: "https://www.latvijasdaba.lv/content/zivis/stizostedion-lucioperca-l-420x300.jpg"},
+  {name: "Karpa", image: "https://www.latvijasdaba.lv/content/zivis/cyprinus-carpio-l-420x300.jpg"},
+  {name: "Līnis", image: "https://www.latvijasdaba.lv/content/zivis/tinca-tinca-l-420x300.jpg"},
+  {name: "Renģe", image: "https://www.latvijasdaba.lv/content/zivis/clupea-harengus-membras-l-420x300.jpg"},
+  {name: "jūras nēģis", image: "https://www.latvijasdaba.lv/content/zivis/petromyzon-marinus-l-420x300.jpg"}
+];
+
+let currentFish = {};
+let usedFishIndices = [];
+let score = 0;
+let moves = 0;
+const maxMoves = 10;
+
+const fishImage = document.getElementById("fishImage");
+const optionsContainer = document.getElementById("options");
+const feedback = document.getElementById("feedback");
+const scoreDisplay = document.getElementById("score");
+const newGameBtn = document.getElementById("newGameBtn");
+
+// Shuffle array utility
+function shuffleArray(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function loadFish() {
+  if (moves >= maxMoves || usedFishIndices.length >= fishDB.length) {
+    endGame();
+    return;
+  }
+
+  feedback.textContent = "";
+
+  // Select a fish not used yet
+  let index;
+  do {
+    index = Math.floor(Math.random() * fishDB.length);
+  } while (usedFishIndices.includes(index));
+
+  usedFishIndices.push(index);
+  currentFish = fishDB[index];
+  fishImage.src = currentFish.image;
+
+  // Select 3 other random fishes
+  let wrongOptions = fishDB.filter((_, i) => i !== index);
+  wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
+
+  // Combine correct + wrong options
+  const allOptions = shuffleArray([currentFish, ...wrongOptions]);
+
+  optionsContainer.innerHTML = "";
+  allOptions.forEach(f => {
+    const btn = document.createElement("button");
+    btn.textContent = f.name;
+    btn.className = "bg-blue-200 hover:bg-blue-300 text-blue-900 font-semibold py-2 px-4 rounded-xl";
+    btn.onclick = () => checkAnswer(f.name);
+    optionsContainer.appendChild(btn);
+  });
+
+  scoreDisplay.textContent = `Score: ${score} | Question: ${moves + 1}/${maxMoves}`;
+}
+
+function checkAnswer(selected) {
+  if (selected === currentFish.name) {
+    feedback.textContent = "✅ Correct!";
+    feedback.className = "text-green-600 font-semibold mt-4";
+    score++;
+  } else {
+    feedback.textContent = `❌ Wrong! Correct: ${currentFish.name}`;
+    feedback.className = "text-red-600 font-semibold mt-4";
+  }
+
+  moves++;
+  scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
+
+  setTimeout(loadFish, 1000);
+}
+
+function endGame() {
+  feedback.textContent = `🏁 Game over! Final score: ${score}/${maxMoves}`;
+  feedback.className = "text-purple-700 font-bold mt-4";
+  optionsContainer.innerHTML = "";
+  newGameBtn.classList.remove("hidden");
+}
+
+function newGame() {
+  score = 0;
+  moves = 0;
+  usedFishIndices = [];
+  newGameBtn.classList.add("hidden");
+  loadFish();
+}
+
+newGameBtn.onclick = newGame;
+
+loadFish();
+</script>
+</body>
+</html>
