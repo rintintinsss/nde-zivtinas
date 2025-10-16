@@ -240,24 +240,27 @@ const allOptions = shuffleArray([currentFish, ...selectedFamilyOption, ...remain
 }
 
 function checkAnswer(selected) {
+  // Disable option buttons to prevent multiple clicks
+  Array.from(optionsContainer.children).forEach(btn => btn.disabled = true);
+
   if (selected === currentFish.name) {
     feedback.textContent = "✅ Correct!";
     feedback.className = "text-green-600 font-semibold mt-4";
     score++;
-    moves++;
-    scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
-    setTimeout(loadFish, 1000);
   } else {
     feedback.textContent = `❌ Wrong! Correct: ${currentFish.name}`;
     feedback.className = "text-red-600 font-semibold mt-4";
-    moves++;
-    scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
-    nextButton.style.display = "inline-block";
-    nextButton.onclick = function() {
-      nextButton.style.display = "none";
-      loadFish();
-    };
   }
+
+  moves++;
+  scoreDisplay.textContent = `Score: ${score} | Question: ${moves}/${maxMoves}`;
+
+  // Show Next button
+  nextButton.style.display = "inline-block";
+  nextButton.onclick = function() {
+    nextButton.style.display = "none";
+    loadFish();
+  };
 }
 
 function endGame() {
